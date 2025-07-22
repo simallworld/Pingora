@@ -1,0 +1,135 @@
+==> CHAT APPLICATION <==
+
+Backend-
+
+Packages used-
+mongoose
+express
+dotenv
+bcryptjs
+cookie-parser
+nodemon
+cors
+socket.io - For real-time communication
+
+
+
+Folder structure-
+models
+routes
+controllers
+
+Steps for backend-
+
+1). create server in server.js
+
+code (.env)-
+	PORT=8080
+	MONGO_URI = mongodb+srv://shivam:KsBPC7jG0NjX37df@cluster0.uu96s.mongodb.net/chat-app-db??retryWrites=true&w=majority&appName=Cluster0
+
+
+code (server.js)-
+	import express from "express"; // method-2
+	import dotenv from "dotenv";
+	import connectDB from "./config/database.js";
+
+	dotenv.config();
+	const app = express();
+
+	const PORT = process.env.PORT || 5000;
+
+	app.listen(PORT, ()=>{
+	connectToMongoDB();
+   	console.log(`Server listening at port ${PORT}`);
+	})
+
+
+2). Create middleware(routes)
+	import express from "express";
+	import { login, logout, signup } from "../controllers/auth.controller.js";
+
+	const router = express.Router();
+
+	router.post("/signup", signup)
+
+	router.post("/login", login)
+
+	router.post("/logout", logout)
+
+	export default router;
+
+
+3). Create controllers
+	export const signup = (req,res) => {
+	res.send("SignupUser")
+	console.log("SignupUser")
+	}
+
+	export const login = (req,res) => {
+   	res.send("LoginUser")
+   	console.log("LoginUser");
+	}
+
+	export const logout = (req,res) => {
+   	res.send("LogoutUser")
+   	console.log("LogoutUser")
+	}	
+
+
+4).  API Testing on Postman
+
+
+5). Database connection in connectToMongoDB.js
+code (connectToMongoDB.js)-
+	import mongoose from 'mongoose';
+
+	const connectToMongoDB = async () => {
+  	try {
+      	await mongoose.connect(process.env.MONGO_DB_URI);
+      	console.log("Connected to MongoDB")
+   	} catch (error) {
+      	console.log("Error connecting to MongoDB", error.message)
+   	}
+	}
+
+	export default connectToMongoDB;
+
+
+6).  Create models
+	
+
+
+
+
+
+
+
+Frontend-
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
