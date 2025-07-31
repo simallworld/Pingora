@@ -1,7 +1,9 @@
 import { createContext, useContext, useState } from "react";
 
+// Create context for authentication state management
 export const AuthContext = createContext();
 
+// Custom hook to access auth context throughout the application
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuthContext = () => {
 	return useContext(AuthContext);

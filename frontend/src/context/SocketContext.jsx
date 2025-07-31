@@ -8,9 +8,13 @@ export const useSocketContext = () => {
 	return useContext(SocketContext);
 };
 
+// Provider component that manages socket connection and online users state
 export const SocketContextProvider = ({ children }) => {
+	// State to store socket instance
 	const [socket, setSocket] = useState(null);
+	// State to track users currently online
 	const [onlineUsers, setOnlineUsers] = useState([]);
+	// Get authenticated user from auth context
 	const { authUser } = useAuthContext();
 
 	useEffect(() => {

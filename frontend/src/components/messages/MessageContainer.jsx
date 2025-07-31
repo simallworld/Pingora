@@ -5,11 +5,14 @@ import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
 import { useAuthContext } from "../../context/AuthContext";
 
+// Component that handles the display of messages and input area
 const MessageContainer = () => {
+	// Get conversation state from Zustand store
 	const { selectedConversation, setSelectedConversation } = useConversation();
 
+	// Reset selected conversation when component unmounts
 	useEffect(() => {
-		// cleanup function (unmounts)
+		// Cleanup function to clear selected conversation
 		return () => setSelectedConversation(null);
 	}, [setSelectedConversation]);
 
