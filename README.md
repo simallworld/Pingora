@@ -1,5 +1,7 @@
 # Pingora - Real Time Chat Application
 
+**Notion Doc:** (https://www.notion.so/Pingora-The-Real-Time-Chat-Application-241ad40474bd805da63edbd2dde17c27?source=copy_link)
+
 ## Overview
 
 Pingora is a modern, real-time chat application built with the MERN stack (MongoDB, Express.js, React, Node.js) and Socket.IO for real-time communication. The application provides a seamless chatting experience with features like real-time messaging, user authentication, and a responsive user interface.
