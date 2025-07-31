@@ -1,7 +1,11 @@
+// Import logout icon from react-icons library
 import { BiLogOut } from "react-icons/bi";
+// Import custom hook for handling logout functionality
 import useLogout from "../../hooks/useLogout";
 
+// Component that renders a logout button with loading state
 const LogoutButton = () => {
+	// Get loading state and logout function from custom hook
 	const { loading, logout } = useLogout();
 
 	return (

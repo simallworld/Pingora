@@ -4,11 +4,12 @@ import { useAuthContext } from "../context/AuthContext";
 
 // Custom hook to handle user login functionality
 const useLogin = () => {
-  // State to track loading status during login process
+  // Track loading state during login process
   const [loading, setLoading] = useState(false);
-  // Get setAuthUser function from auth context
+  // Get function to update authenticated user in global context
   const { setAuthUser } = useAuthContext();
 
+  // Handle user login with username and password
   const login = async (username, password) => {
     const success = handleInputErrors(username, password);
     if (!success) return;

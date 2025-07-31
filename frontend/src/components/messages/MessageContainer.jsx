@@ -7,22 +7,23 @@ import { useAuthContext } from "../../context/AuthContext";
 
 // Component that handles the display of messages and input area
 const MessageContainer = () => {
-	// Get conversation state from Zustand store
+	// Get selected conversation and setter from global state management
 	const { selectedConversation, setSelectedConversation } = useConversation();
 
-	// Reset selected conversation when component unmounts
+	// Cleanup: Reset selected conversation when navigating away from chat
 	useEffect(() => {
-		// Cleanup function to clear selected conversation
+		// Clear selected conversation on component unmount
 		return () => setSelectedConversation(null);
 	}, [setSelectedConversation]);
 
 	return (
 		<div className='md:min-w-[450px] flex flex-col'>
+			{/* Show welcome screen if no chat is selected, otherwise show chat interface */}
 			{!selectedConversation ? (
 				<NoChatSelected />
 			) : (
 				<>
-					{/* Header */}
+					{/* Chat header showing recipient's name */}
 					<div className='bg-slate-500 px-4 py-2 mb-2'>
 						<span className='label-text'>To:</span>{" "}
 						<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
@@ -37,6 +38,7 @@ const MessageContainer = () => {
 export default MessageContainer;
 
 const NoChatSelected = () => {
+	// Get authenticated user info from auth context
 	const { authUser } = useAuthContext();
 	return (
 		<div className='flex items-center justify-center w-full h-full'>
