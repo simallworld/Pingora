@@ -32,7 +32,7 @@ const SignUp = () => {
 
 				<form onSubmit={handleSubmit}>
 					<div>
-						<label className='label p-2 text-red-300'>
+						<label className='label p-2'>
 							<span className='text-base label-text'>Full Name</span>
 						</label>
 						<input
