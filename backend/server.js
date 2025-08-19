@@ -3,6 +3,7 @@ import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 // Import API route handlers
 import authRoutes from "./routes/auth.routes.js";
@@ -20,6 +21,13 @@ dotenv.config();
 const __dirname = path.resolve();
 // Set server port from environment variables or use 5000 as fallback
 const PORT = process.env.PORT || 5000;
+
+// app.use(cors({
+//   origin: ["http://localhost:5173", "https://your-frontend.vercel.app"],
+//   credentials: true
+// }));
+
+app.use(cors({ origin: "*" }));
 
 // Parse JSON payloads in requests
 app.use(express.json());

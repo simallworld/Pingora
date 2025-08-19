@@ -37,10 +37,23 @@ const useListenMessages = () => {
       sound.play();
       // Update messages state with the new message using functional update
       setMessages((prevMessages) => {
-        console.log(
-          "useListenMessages: Updating messages, prev count:",
-          prevMessages.length
+        // Prevent duplicate messages: do not add if there's an optimistic message
+        const isDuplicate = prevMessages.some(
+          (msg) =>
+            msg.senderId === newMessage.senderId &&
+            msg.message === newMessage.message &&
+            (msg._id === newMessage._id || String(msg._id).startsWith("temp_"))
         );
+        if (isDuplicate) {
+          // Replace the optimistic message with the confirmed one from the server
+          return prevMessages.map((msg) =>
+            msg.senderId === newMessage.senderId &&
+            msg.message === newMessage.message &&
+            String(msg._id).startsWith("temp_")
+              ? newMessage
+              : msg
+          );
+        }
         return [...prevMessages, newMessage];
       });
     };
