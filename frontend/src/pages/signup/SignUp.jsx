@@ -24,16 +24,18 @@ const SignUp = () => {
 	};
 
 	return (
-		<div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
-			<div className='w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
-				<h1 className='text-3xl font-semibold text-center text-gray-300'>
-					Sign Up <span className='text-blue-500'> ChatApp</span>
+		<div className='flex flex-col items-center justify-center min-w-96 mx-auto relative'>
+			<div className='text-white md:text-3xl text-2xl fixed left-6 top-6'>Pingora</div>
+			<div className='md:text-lg text-green-200 text-sm fixed left-6 top-13 md:top-14'>Your messaging partner</div>
+			<div className='w-full p-6 rounded-lg shadow-md border-1 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
+				<h1 className='text-3xl font-semibold text-center text-gray-100'>
+					Sign Up
 				</h1>
 
 				<form onSubmit={handleSubmit}>
 					<div>
-						<label className='label p-2'>
-							<span className='text-base label-text'>Full Name</span>
+						<label className='label mt-2'>
+							<span className='text-base label-text text-gray-100'>Full Name</span>
 						</label>
 						<input
 							type='text'
@@ -45,8 +47,8 @@ const SignUp = () => {
 					</div>
 
 					<div>
-						<label className='label p-2 '>
-							<span className='text-base label-text'>Username</span>
+						<label className='label mt-2'>
+							<span className='text-base label-text text-gray-100'>Username</span>
 						</label>
 						<input
 							type='text'
@@ -58,8 +60,8 @@ const SignUp = () => {
 					</div>
 
 					<div>
-						<label className='label'>
-							<span className='text-base label-text'>Password</span>
+						<label className='label mt-2'>
+							<span className='text-base label-text text-gray-100'>Password</span>
 						</label>
 						<input
 							type='password'
@@ -71,8 +73,8 @@ const SignUp = () => {
 					</div>
 
 					<div>
-						<label className='label'>
-							<span className='text-base label-text'>Confirm Password</span>
+						<label className='label mt-2'>
+							<span className='text-base label-text text-gray-100'>Confirm Password</span>
 						</label>
 						<input
 							type='password'
@@ -87,14 +89,14 @@ const SignUp = () => {
 
 					<Link
 						to={"/login"}
-						className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block'
+						className='text-sm hover:underline hover:text-blue-600 mt-8 inline-block text-gray-100'
 						href='#'
 					>
 						Already have an account?
 					</Link>
 
 					<div>
-						<button className='btn btn-block btn-sm mt-2 border border-slate-700' disabled={loading}>
+						<button className='bg-[#0219123d] w-full rounded-md p-2 text-white cursor-pointer btn-sm mt-2 border-2 border-slate-200' disabled={loading}>
 							{loading ? <span className='loading loading-spinner'></span> : "Sign Up"}
 						</button>
 					</div>

@@ -10,19 +10,27 @@ const MessageContainer = () => {
 	const { selectedConversation } = useConversation();
 
 	return (
-		<div className='md:min-w-[450px] flex flex-col'>
+		<div className="md:min-w-[450px] flex flex-col h-full flex-1">
 			{/* Show welcome screen if no chat is selected, otherwise show chat interface */}
 			{!selectedConversation ? (
 				<NoChatSelected />
 			) : (
 				<>
-					{/* Chat header showing recipient's name */}
-					<div className='bg-slate-500 px-4 py-2 mb-2'>
-						<span className='label-text'>To:</span>{" "}
-						<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
+					{/* Chat header (doesn't grow) */}
+					<div className="bg-slate-200 px-4 py-3 mb-2">
+						<span className="label-text">{" "}</span>
+						<span className="text-gray-900 font-bold">{selectedConversation.fullName}</span>
 					</div>
-					<Messages />
-					<MessageInput />
+					{/* Make messages area scrollable and fill available space */}
+					<div className="flex-1 min-h-0 overflow-y-auto">
+						<Messages />
+					</div>
+					{/* Input: sticky for mobile so it's always visible at the bottom of viewport */}
+					<div className="shrink-0 relative">
+						<div className="sticky bottom-0 z-10">
+							<MessageInput />
+						</div>
+					</div>
 				</>
 			)}
 		</div>

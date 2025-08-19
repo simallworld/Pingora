@@ -43,7 +43,7 @@ const Messages = () => {
 
 			{/* Show empty state message when no messages exist */}
 			{!loading && validMessages.length === 0 && (
-				<p className='text-center text-gray-500'>Send a message to start the conversation</p>
+				<p className='text-center text-gray-300'>Send a message to start the conversation</p>
 			)}
 		</div>
 	);

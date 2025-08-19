@@ -4,6 +4,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import useConversation from "../../zustand/useConversation";
 import useGetConversations from "../../hooks/useGetConversations";
 import toast from "react-hot-toast";
+import LogoutButton from "./LogoutButton";
 
 const SearchInput = () => {
 	// State for search input value
@@ -34,19 +35,28 @@ const SearchInput = () => {
 	};
 	// Render search form with input and submit button
 	return (
-		<form onSubmit={handleSubmit} className='flex items-center gap-2'>
+		<form
+			onSubmit={handleSubmit}
+			className="flex items-center justify-between gap-2"
+		>
 			{/* Search input field */}
-			<input
-				type='text'
-				placeholder='Search…'
-				className='input input-bordered rounded-full'
-				value={search}
-				onChange={(e) => setSearch(e.target.value)}
-			/>
-			{/* Search submit button with icon */}
-			<button type='submit' className='btn btn-circle bg-sky-500 text-white'>
-				<IoSearchSharp className='w-6 h-6 outline-none' />
-			</button>
+			<div className="flex gap-2 w-full">
+				<input
+					type="text"
+					placeholder="Search…"
+					className="input input-bordered px-6 w-full rounded-full"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
+				{/* Search submit button with icon */}
+				<button type="submit" className="btn btn-circle text-black">
+					<IoSearchSharp className="w-6 h-6 outline-none" />
+				</button>
+			</div>
+			{/* Logout button visible only on mobile */}
+			<div className="block md:hidden ml-2">
+				<LogoutButton />
+			</div>
 		</form>
 	);
 };

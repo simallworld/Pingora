@@ -19,8 +19,8 @@ dotenv.config();
 
 // Set __dirname since it's not available in ES modules
 const __dirname = path.resolve();
-// Set server port from environment variables or use 5000 as fallback
-const PORT = process.env.PORT || 5000;
+// Set server port from environment variables or use 8000 as fallback
+const PORT = process.env.PORT || 8000;
 
 // app.use(cors({
 //   origin: ["http://localhost:5173", "https://your-frontend.vercel.app"],

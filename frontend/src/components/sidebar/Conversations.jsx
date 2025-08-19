@@ -10,7 +10,7 @@ const Conversations = () => {
 	const { loading, conversations } = useGetConversations();
 	return (
 		// Container for all conversations with vertical scrolling
-		<div className='py-2 flex flex-col overflow-auto'>
+		<div className='py-2 bg-[#9FE2BF] rounded-sm flex flex-col overflow-auto'>
 			{conversations.map((conversation, idx) => (
 				<Conversation
 					key={conversation._id}

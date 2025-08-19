@@ -90,10 +90,10 @@ const Message = ({ message }) => {
 						/>
 					</div>
 				</div>
-				<div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2`}>
+				<div className={`chat-bubble break-words text-white ${bubbleBgColor} ${shakeClass} pb-2`}>
 					{String(message.message)}
 				</div>
-				<div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>
+				<div className='chat-footer text-white opacity-50 text-xs flex gap-1 items-center'>
 					{formattedTime}
 				</div>
 			</div>
