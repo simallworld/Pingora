@@ -21,15 +21,20 @@ const useLogin = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
-      if (data.error) {
-        throw new Error(data.error);
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (!res.ok) {
+        throw new Error(
+          (data && data.error) || `${res.status} ${res.statusText}`
+        );
       }
+      if (!data) throw new Error("Empty response from server");
 
       localStorage.setItem("chat-user", JSON.stringify(data));
       setAuthUser(data);
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "Login failed");
     } finally {
       setLoading(false);
     }

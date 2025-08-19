@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import useConversation from "../../zustand/useConversation";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
@@ -8,13 +7,7 @@ import { useAuthContext } from "../../context/AuthContext";
 // Component that handles the display of messages and input area
 const MessageContainer = () => {
 	// Get selected conversation and setter from global state management
-	const { selectedConversation, setSelectedConversation } = useConversation();
-
-	// Cleanup: Reset selected conversation when navigating away from chat
-	useEffect(() => {
-		// Clear selected conversation on component unmount
-		return () => setSelectedConversation(null);
-	}, [setSelectedConversation]);
+	const { selectedConversation } = useConversation();
 
 	return (
 		<div className='md:min-w-[450px] flex flex-col'>

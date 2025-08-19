@@ -33,18 +33,31 @@ export const sendMessage = async (req, res) => {
       conversation.messages.push(newMessage._id);
     }
 
-    // await conversation.save();
-    // await newMessage.save();
-
-    // this will run in parallel
     // Save both conversation and message in parallel for better performance
     await Promise.all([conversation.save(), newMessage.save()]);
+
+    // Create a clean message object for socket emission
+    const messageForSocket = {
+      _id: newMessage._id,
+      message: newMessage.message,
+      senderId: newMessage.senderId, // Keep as string for frontend comparison
+      receiverId: newMessage.receiverId,
+      createdAt: newMessage.createdAt,
+      updatedAt: newMessage.updatedAt,
+    };
 
     // Send real-time message notification to receiver if they are online
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
-      // Emit new message event to specific receiver's socket
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      console.log("Emitting newMessage to receiver:", receiverSocketId);
+      io.to(receiverSocketId).emit("newMessage", messageForSocket);
+    }
+
+    // Also emit to sender for immediate confirmation (in case they're on multiple tabs)
+    const senderSocketId = getReceiverSocketId(senderId);
+    if (senderSocketId) {
+      console.log("Emitting newMessage to sender:", senderSocketId);
+      io.to(senderSocketId).emit("newMessage", messageForSocket);
     }
 
     res.status(201).json(newMessage);

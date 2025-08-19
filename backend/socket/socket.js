@@ -11,8 +11,9 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: [process.env.CLIENT_URL || "http://localhost:5173"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
 
@@ -35,6 +36,8 @@ io.on("connection", (socket) => {
 
   // Broadcast the updated online users list to all connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
+  // Notify all clients that user list should refresh (for new registrations)
+  io.emit("refreshUsers");
 
   // socket.on() is used to listen to the events. can be used both on client and server side
   // Handle socket disconnection
@@ -44,6 +47,8 @@ io.on("connection", (socket) => {
     delete userSocketMap[userId];
     // Broadcast updated online users list
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    // Notify all clients that user list should refresh
+    io.emit("refreshUsers");
   });
 });
 

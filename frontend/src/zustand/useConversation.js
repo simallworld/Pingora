@@ -8,8 +8,15 @@ const useConversation = create((set) => ({
 	setSelectedConversation: (selectedConversation) => set({ selectedConversation }),
 	// Store all messages for the current conversation
 	messages: [],
-	// Function to update the messages array
-	setMessages: (messages) => set({ messages }),
+	// Function to update the messages array (supports array or updater function)
+	setMessages: (messagesOrUpdater) =>
+		set((state) => {
+			const result =
+				typeof messagesOrUpdater === "function"
+					? messagesOrUpdater(state.messages)
+					: messagesOrUpdater;
+			return { messages: Array.isArray(result) ? result : [] };
+		}),
 }));
 
 export default useConversation;

@@ -2,6 +2,7 @@
 import { useSocketContext } from "../../context/SocketContext";
 // Import custom hook for managing conversation state
 import useConversation from "../../zustand/useConversation";
+import PropTypes from "prop-types";
 
 // Component for displaying individual conversation/chat item in the sidebar
 const Conversation = ({ conversation, lastIdx, emoji }) => {
@@ -46,6 +47,21 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 	);
 };
 export default Conversation;
+
+Conversation.propTypes = {
+	conversation: PropTypes.shape({
+		_id: PropTypes.string.isRequired,
+		fullName: PropTypes.string.isRequired,
+		profilePic: PropTypes.string,
+	}).isRequired,
+	lastIdx: PropTypes.bool,
+	emoji: PropTypes.string,
+};
+
+Conversation.defaultProps = {
+	lastIdx: false,
+	emoji: "",
+};
 
 // STARTER CODE SNIPPET
 // const Conversation = () => {

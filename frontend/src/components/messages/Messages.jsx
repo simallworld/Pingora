@@ -12,54 +12,40 @@ const Messages = () => {
 	// Reference to the last message for auto-scrolling
 	const lastMessageRef = useRef();
 
+	// Filter out invalid messages to prevent crashes
+	const validMessages = messages.filter(msg =>
+		msg &&
+		msg._id &&
+		msg.message &&
+		msg.senderId
+	);
+
 	// Auto-scroll to the latest message whenever messages change
 	useEffect(() => {
 		setTimeout(() => {
 			lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
 		}, 100);
-	}, [messages]);
+	}, [validMessages]);
 
 	return (
 		<div className='px-4 flex-1 overflow-auto'>
 			{/* Display messages if they exist and loading is complete */}
 			{!loading &&
-				messages.length > 0 &&
-				messages.map((message) => (
-					<div key={message._id} ref={lastMessageRef}>
+				validMessages.length > 0 &&
+				validMessages.map((message, index) => (
+					<div key={message._id || `msg-${index}`} ref={index === validMessages.length - 1 ? lastMessageRef : null}>
 						<Message message={message} />
 					</div>
 				))}
 
 			{/* Show loading skeletons while fetching messages */}
 			{loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+
 			{/* Show empty state message when no messages exist */}
-			{!loading && messages.length === 0 && (
-				<p className='text-center'>Send a message to start the conversation</p>
+			{!loading && validMessages.length === 0 && (
+				<p className='text-center text-gray-500'>Send a message to start the conversation</p>
 			)}
 		</div>
 	);
 };
 export default Messages;
-
-// STARTER CODE SNIPPET
-// import Message from "./Message";
-
-// const Messages = () => {
-// 	return (
-// 		<div className='px-4 flex-1 overflow-auto'>
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 			<Message />
-// 		</div>
-// 	);
-// };
-// export default Messages;
