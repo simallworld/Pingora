@@ -13,8 +13,8 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 	const isSelected = selectedConversation?._id === conversation._id;
 	// Get online users array from socket context
 	const { onlineUsers } = useSocketContext();
-	// Check if this conversation's user is currently online
-	const isOnline = onlineUsers.includes(conversation._id);
+	// Check if this conversation's user is currently online, robust comparison for ID types
+	const isOnline = onlineUsers.some(id => String(id) === String(conversation._id));
 
 	return (
 		<>
@@ -26,9 +26,12 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 				onClick={() => setSelectedConversation(conversation)}
 			>
 				{/* Avatar container with online status indicator */}
-				<div className={`avatar ${isOnline ? "online" : ""}`}>
+				<div className="avatar relative">
 					<div className='w-12 rounded-full'>
 						<img src={conversation.profilePic} alt='user avatar' />
+						{isOnline && (
+							<span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full block z-10"></span>
+						)}
 					</div>
 				</div>
 
