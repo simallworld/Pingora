@@ -1,5 +1,5 @@
 // Import core Node.js and Express modules
-import path from "path";
+// import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -18,7 +18,7 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 // Set __dirname since it's not available in ES modules
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 // Set server port from environment variables or use 8000 as fallback
 const PORT = process.env.PORT || 8000;
 
@@ -40,12 +40,12 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
 // Serve static files from the frontend build directory
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
 // Serve frontend app for all unmatched routes (SPA fallback)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+// });
 
 // Start server and connect to MongoDB
 server.listen(PORT, () => {
