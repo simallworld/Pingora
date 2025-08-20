@@ -15,7 +15,7 @@ const useGetMessages = () => {
       setLoading(true);
       try {
         // Fetch messages for the selected conversation
-        const res = await fetch(`/api/messages/${selectedConversation._id}`);
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/messages/${selectedConversation._id}`);
         const data = await res.json();
         if (data.error) throw new Error(data.error);
         // Update messages in global state
