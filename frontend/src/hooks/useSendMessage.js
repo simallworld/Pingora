@@ -62,6 +62,7 @@ const useSendMessage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            credentials: "include",
           },
           body: JSON.stringify({ message: message.trim() }),
         }
