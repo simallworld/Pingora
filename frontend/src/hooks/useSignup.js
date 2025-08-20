@@ -41,7 +41,7 @@ const useSignup = () => {
       try {
         data = text ? JSON.parse(text) : null;
       } catch (parseErr) {
-        throw new Error("Server returned invalid JSON");
+        throw new Error("Server returned invalid JSON", parseErr);
       }
 
       if (!res.ok) {
@@ -50,7 +50,8 @@ const useSignup = () => {
         );
       }
       // Accept empty data iff 204 No Content, otherwise expect JSON
-      if (!data && res.status !== 204) throw new Error("Empty response from server");
+      if (!data && res.status !== 204)
+        throw new Error("Empty response from server");
 
       if (data) {
         localStorage.setItem("chat-user", JSON.stringify(data));
