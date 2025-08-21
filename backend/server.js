@@ -29,8 +29,7 @@ const PORT = process.env.PORT || 8000;
 
 // app.use(cors({ origin: "*" }));
 app.use(cors({
-  origin: ["http://localhost:5173", "https://pingora-nine.vercel.app/"],
-  credentials: true
+  origin: "*"
 }));
 
 // Parse JSON payloads in requests
