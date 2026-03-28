@@ -14,7 +14,9 @@ const useGetConversations = () => {
     setLoading(true);
     try {
       // Fetch users from the backend API
-      const res = await fetch("/api/users");
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users`, {
+        credentials: "include",
+      });
       const data = await res.json();
       if (data.error) {
         throw new Error(data.error);

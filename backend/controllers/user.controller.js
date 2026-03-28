@@ -12,8 +12,14 @@ export const getUsersForSidebar = async (req, res) => {
       _id: { $ne: loggedInUserId },
     }).select("-password");
 
+    // Transform profilePic URLs to use DiceBear for reliability
+    const usersWithUpdatedPics = filteredUsers.map(user => ({
+      ...user.toObject(),
+      profilePic: user.profilePic || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(user.username)}`,
+    }));
+
     // Send the filtered users list as a successful response
-    res.status(200).json(filteredUsers);
+    res.status(200).json(usersWithUpdatedPics);
   } catch (error) {
     // Log any errors that occur during the process
     console.error("Error in getUsersForSidebar: ", error.message);

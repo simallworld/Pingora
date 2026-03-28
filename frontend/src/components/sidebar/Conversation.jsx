@@ -28,7 +28,13 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 				{/* Avatar container with online status indicator */}
 				<div className="avatar relative">
 					<div className='w-12 rounded-full'>
-						<img src={conversation.profilePic} alt='user avatar' />
+						<img 
+							src={conversation.profilePic || `https://api.dicebear.com/9.x/avataaars/svg?seed=${conversation.fullName}`} 
+							alt='user avatar'
+							onError={(e) => {
+								e.target.src = `https://api.dicebear.com/9.x/avataaars/svg?seed=${conversation.fullName}`;
+							}}
+						/>
 						{isOnline && (
 							<span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full block z-10"></span>
 						)}

@@ -57,12 +57,13 @@ const useSendMessage = () => {
       );
 
       const res = await fetch(
-        `/api/messages/send/${selectedConversation._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/messages/send/${selectedConversation._id}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ message: message.trim() }),
         }
       );

@@ -4,6 +4,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dns from "node:dns";
+
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 // Import API route handlers
 import authRoutes from "./routes/auth.routes.js";
@@ -29,7 +32,8 @@ const PORT = process.env.PORT || 8000;
 
 // app.use(cors({ origin: "*" }));
 app.use(cors({
-  origin: "*"
+  origin: ["http://localhost:5173", "https://pingora-nine.vercel.app/"],
+  credentials: true
 }));
 
 // Parse JSON payloads in requests

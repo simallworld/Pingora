@@ -56,20 +56,21 @@ const Message = ({ message }) => {
 
 		// Set profile picture based on message sender with fallbacks
 		let profilePic = "";
+		const fallbackName = fromMe ? authUser.fullName : (selectedConversation?.fullName || "user");
 		try {
 			if (fromMe) {
-				profilePic = authUser.profilePic || "https://via.placeholder.com/40";
+				profilePic = authUser.profilePic || `https://api.dicebear.com/9.x/avataaars/svg?seed=${authUser.fullName}`;
 			} else {
 				// Handle populated senderId object
 				if (message.senderId && typeof message.senderId === "object" && message.senderId.profilePic) {
 					profilePic = message.senderId.profilePic;
 				} else {
-					profilePic = selectedConversation?.profilePic || "https://via.placeholder.com/40";
+					profilePic = selectedConversation?.profilePic || `https://api.dicebear.com/9.x/avataaars/svg?seed=${fallbackName}`;
 				}
 			}
 		} catch (picError) {
 			console.warn("Message component: Error getting profile pic", picError);
-			profilePic = "https://via.placeholder.com/40";
+			profilePic = `https://api.dicebear.com/9.x/avataaars/svg?seed=${fallbackName}`;
 		}
 
 		// Set message bubble background color (blue for current user's messages)
@@ -85,7 +86,7 @@ const Message = ({ message }) => {
 							src={profilePic}
 							onError={(e) => {
 								console.warn("Message component: Image load failed, using fallback");
-								e.target.src = "https://via.placeholder.com/40";
+								e.target.src = `https://api.dicebear.com/9.x/avataaars/svg?seed=${fallbackName}`;
 							}}
 						/>
 					</div>

@@ -41,8 +41,8 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // ---------- PROFILE PIC ----------
-    const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
-    const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
+    const boyProfilePic = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(username)}&backgroundColor=b6e3f4`;
+    const girlProfilePic = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(username)}&backgroundColor=ffdfbf`;
 
     // ---------- CREATE USER ----------
     const newUser = new User({
@@ -99,6 +99,7 @@ export const login = async (req, res) => {
 
     // Generate JWT
     generateTokenAndSetCookie(user._id, res);
+    console.log("Login - Cookie set, response headers:", res.getHeaders());
 
     // Notify clients to refresh user lists
     try {
@@ -109,7 +110,7 @@ export const login = async (req, res) => {
       _id: user._id,
       fullName: user.fullName,
       username: user.username,
-      profilePic: user.profilePic,
+      profilePic: user.profilePic || `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(user.username)}`,
     });
   } catch (error) {
     console.error("Error in login controller:", error.message);
