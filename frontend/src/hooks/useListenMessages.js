@@ -1,5 +1,5 @@
 // Import required dependencies
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 // Import socket context and conversation state management
 import { useSocketContext } from "../context/SocketContext";
@@ -14,6 +14,16 @@ const useListenMessages = () => {
   const { socket } = useSocketContext();
   // Get messages array and setter from global state
   const { setMessages } = useConversation();
+  // Preload audio for better performance
+  const notificationAudioRef = useRef(null);
+
+  useEffect(() => {
+    // Preload the notification sound
+    notificationAudioRef.current = new Audio(notificationSound);
+    notificationAudioRef.current.volume = 0.5;
+    notificationAudioRef.current.load();
+    console.log("useListenMessages: Audio preloaded");
+  }, []);
 
   useEffect(() => {
     console.log(
@@ -32,16 +42,31 @@ const useListenMessages = () => {
       console.log("useListenMessages: Received new message:", newMessage);
       // Add shake animation flag to new messages
       newMessage.shouldShake = true;
+      
       // Play notification sound for incoming message
       try {
-        const sound = new Audio(notificationSound);
-        sound.volume = 0.5;
-        sound.play().catch(err => {
-          console.log("Audio play blocked or failed:", err.message);
-        });
+        if (notificationAudioRef.current) {
+          notificationAudioRef.current.currentTime = 0;
+          const playPromise = notificationAudioRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              console.log("useListenMessages: Notification sound played");
+            }).catch(error => {
+              console.log("useListenMessages: Audio play error:", error.message);
+            });
+          }
+        } else {
+          console.log("useListenMessages: Audio not preloaded, creating new instance");
+          const sound = new Audio(notificationSound);
+          sound.volume = 0.5;
+          sound.play().catch(err => {
+            console.log("Audio play blocked:", err.message);
+          });
+        }
       } catch (err) {
         console.log("Audio error:", err.message);
       }
+      
       // Update messages state with the new message using functional update
       setMessages((prevMessages) => {
         // Prevent duplicate messages: do not add if there's an optimistic message
@@ -73,6 +98,6 @@ const useListenMessages = () => {
       console.log("useListenMessages: Removing newMessage listener");
       socket.off("newMessage", handleNewMessage);
     };
-  }, [socket, setMessages]); // Removed messages dependency to fix stale closure
+  }, [socket, setMessages]);
 };
 export default useListenMessages;
