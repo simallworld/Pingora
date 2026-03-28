@@ -23,12 +23,26 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Health check endpoint
+console.log("Setting up /api/health endpoint");
 app.get("/api/health", (req, res) => {
+  console.log("Health check hit!");
   res.json({ 
     status: "ok", 
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || "development"
+    environment: process.env.NODE_ENV || "development",
+    clientUrl: process.env.CLIENT_URL || "not set"
   });
+});
+
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send("Server is running! Environment: " + (process.env.NODE_ENV || "development"));
+});
+
+// Catch-all 404 handler
+app.use((req, res) => {
+  console.log("404 for:", req.method, req.path);
+  res.status(404).send("Route not found: " + req.path);
 });
 
 // Create HTTP server and initialize Socket.io with CORS options
