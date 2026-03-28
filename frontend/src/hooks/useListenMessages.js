@@ -5,9 +5,6 @@ import { useEffect, useRef } from "react";
 import { useSocketContext } from "../context/SocketContext";
 import useConversation from "../zustand/useConversation";
 
-// Import notification sound for new messages
-import notificationSound from "../assets/sounds/notification.mp3";
-
 // Custom hook to handle real-time message updates
 const useListenMessages = () => {
   // Get socket instance from context
@@ -18,11 +15,11 @@ const useListenMessages = () => {
   const notificationAudioRef = useRef(null);
 
   useEffect(() => {
-    // Preload the notification sound
-    notificationAudioRef.current = new Audio(notificationSound);
+    // Preload the notification sound using direct URL
+    notificationAudioRef.current = new Audio("/notification.mp3");
     notificationAudioRef.current.volume = 0.5;
     notificationAudioRef.current.load();
-    console.log("useListenMessages: Audio preloaded");
+    console.log("useListenMessages: Audio preloaded from /notification.mp3");
   }, []);
 
   useEffect(() => {
