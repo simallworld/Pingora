@@ -1,15 +1,18 @@
-# Pingora - Real Time Chat Application
+# Pingora - Real-Time Chat Application
 
-**Notion Doc:** [doc](https://www.notion.so/Pingora-The-Real-Time-Chat-Application-241ad40474bd805da63edbd2dde17c27?source=copy_link)
+![Vercel](https://img.shields.io/badge/Vercel-Deployed-brightgreen)
+![Render](https://img.shields.io/badge/Render-Deployed-brightgreen)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-blue)
 
 ## Overview
 
 Pingora is a modern, real-time chat application built with the MERN stack (MongoDB, Express.js, React, Node.js) and Socket.IO for real-time communication. The application provides a seamless chatting experience with features like real-time messaging, user authentication, and a responsive user interface.
 
+**Live Demo:** https://pingora-nine.vercel.app
+
 ## Tech Stack
 
 ### Frontend
-
 - React.js with Vite
 - Tailwind CSS with DaisyUI
 - Socket.IO Client
@@ -19,181 +22,140 @@ Pingora is a modern, real-time chat application built with the MERN stack (Mongo
 - React Hot Toast for notifications
 
 ### Backend
-
 - Node.js
 - Express.js
-- MongoDB for database
+- MongoDB with Mongoose
 - Socket.IO for real-time communication
 - JSON Web Tokens (JWT) for authentication
+- bcryptjs for password hashing
 - Cookie Parser for handling cookies
-
-## Project Structure
-
-### Frontend Structure
-
-```
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── messages/          # Message-related components
-│   │   │   ├── Message.jsx           # Individual message component
-│   │   │   ├── MessageContainer.jsx  # Container for messages
-│   │   │   ├── MessageInput.jsx      # Message input field
-│   │   │   └── Messages.jsx          # Messages list component
-│   │   ├── sidebar/           # Sidebar components
-│   │   │   ├── Conversation.jsx      # Single conversation item
-│   │   │   ├── Conversations.jsx     # List of conversations
-│   │   │   ├── LogoutButton.jsx      # Logout functionality
-│   │   │   ├── SearchInput.jsx       # Search conversations
-│   │   │   └── Sidebar.jsx           # Main sidebar component
-│   │   └── skeletons/        # Loading skeleton components
-│   │       └── MessageSkeleton.jsx   # Loading animation for messages
-│   ├── context/
-│   │   ├── AuthContext.jsx    # Authentication context
-│   │   └── SocketContext.jsx  # Socket.IO context
-│   ├── hooks/                 # Custom React hooks
-│   │   ├── useGetConversations.js    # Fetch conversations
-│   │   ├── useGetMessages.js         # Fetch messages
-│   │   ├── useListenMessages.js      # Real-time message updates
-│   │   ├── useLogin.js               # Login functionality
-│   │   ├── useLogout.js              # Logout functionality
-│   │   ├── useSendMessage.js         # Send message functionality
-│   │   └── useSignup.js              # Signup functionality
-│   ├── pages/
-│   │   ├── home/             # Home page
-│   │   │   └── Home.jsx      # Main chat interface
-│   │   ├── login/            # Login page
-│   │   │   └── Login.jsx     # Login form
-│   │   └── signup/           # Signup page
-│   │       ├── GenderCheckbox.jsx    # Gender selection
-│   │       └── SignUp.jsx            # Signup form
-│   └── zustand/              # Zustand store
-│       └── useConversation.js        # Conversation state management
-```
-
-### Backend Structure
-
-```
-backend/
-├── controllers/              # Request handlers
-│   ├── auth.controller.js    # Authentication logic
-│   ├── message.controller.js # Message handling
-│   └── user.controller.js    # User management
-├── db/                      # Database configuration
-│   └── connectToMongoDB.js  # MongoDB connection setup
-├── middleware/              # Custom middleware
-│   └── protectRoute.js      # Authentication middleware
-├── models/                  # MongoDB schemas
-│   ├── conversation.model.js # Conversation schema
-│   ├── message.model.js      # Message schema
-│   └── user.model.js         # User schema
-├── routes/                  # API routes
-│   ├── auth.routes.js        # Authentication routes
-│   ├── message.routes.js     # Message routes
-│   └── user.routes.js        # User routes
-├── socket/                  # Socket.IO configuration
-│   └── socket.js            # Real-time communication setup
-└── utils/                   # Utility functions
-    └── generateToken.js      # JWT token generation
-```
 
 ## Features
 
-1. **User Authentication**
+### Authentication
+- User registration with gender-based avatars
+- Secure login/logout
+- JWT-based authentication with HTTP-only cookies
+- Password hashing with bcrypt
 
-   - Secure signup and login
-   - JWT-based authentication
-   - Password hashing
-   - Protected routes
+### Real-Time Messaging
+- Instant message delivery via Socket.IO
+- Optimistic UI updates
+- Sound notifications for incoming messages
+- Message delivery confirmation
 
-2. **Real-time Messaging**
+### User Experience
+- Responsive design for mobile and desktop
+- Online/offline status indicators
+- Conversation search
+- Loading states with skeletons
+- Toast notifications
 
-   - Instant message delivery
-   - Message status updates
-   - Conversation management
-   - Emoji support
+### Security
+- Protected API routes
+- HTTP-only secure cookies
+- CORS configuration for cross-origin requests
+- Environment variable configuration
 
-3. **User Experience**
+## Project Structure
 
-   - Responsive design
-   - Loading states with skeletons
-   - Sound notifications
-   - Last seen timestamps
-   - Online/offline status
+```
+Pingora/
+├── frontend/                    # React frontend application
+│   ├── src/
+│   │   ├── components/         # React components
+│   │   ├── context/            # React Context providers
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── pages/              # Application pages
+│   │   ├── utils/              # Utility functions
+│   │   └── zustand/            # State management
+│   └── public/                 # Static assets
+│
+├── backend/                    # Node.js backend API
+│   ├── controllers/            # Request handlers
+│   ├── db/                     # Database configuration
+│   ├── middleware/             # Express middleware
+│   ├── models/                 # Mongoose schemas
+│   ├── routes/                 # API routes
+│   ├── socket/                 # Socket.IO setup
+│   └── utils/                  # Utility functions
+│
+└── README.md                   # Project documentation
+```
 
-4. **Security**
-   - Protected API routes
-   - Secure cookie handling
-   - Environment variable configuration
-   - MongoDB connection security
+## Deployment
 
-## Getting Started
+### Frontend (Vercel)
+- **URL:** https://pingora-nine.vercel.app
+- **Environment Variable:** `VITE_API_BASE_URL` = Backend URL
 
-1. **Prerequisites**
+### Backend (Render)
+- **URL:** https://pingora-uwf7.onrender.com
+- **Environment Variables:**
+  - `PORT` = 8000
+  - `MONGO_DB_URI` = MongoDB connection string
+  - `JWT_SECRET` = JWT signing secret
+  - `NODE_ENV` = production
+  - `CLIENT_URL` = Frontend URL (https://pingora-nine.vercel.app)
 
-   - Node.js
-   - MongoDB
-   - npm or yarn
+## Getting Started (Local Development)
 
-2. **Installation**
+### Prerequisites
+- Node.js (v18+)
+- MongoDB (local or Atlas)
+- npm or yarn
 
-   ```bash
-   # Clone the repository
-   git clone [repository-url]
+### Backend Setup
 
-   # Install backend dependencies
-   cd backend
-   npm install
+```bash
+cd backend
+npm install
 
-   # Install frontend dependencies
-   cd ../frontend
-   npm install
-   ```
+# Create .env file
+cp .env.example .env  # Then edit with your values
 
-3. **Configuration**
-   Create a `.env` file in the backend directory with:
+# Start development server
+npm run dev
+```
 
-   ```
-   PORT=5000
-   MONGO_DB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
-   NODE_ENV=development
-   ```
+### Frontend Setup
 
-4. **Running the Application**
+```bash
+cd frontend
+npm install
 
-   ```bash
-   # Start backend server
-   cd backend
-   npm start
+# Create .env file
+VITE_API_BASE_URL=http://localhost:8000
 
-   # Start frontend development server
-   cd frontend
-   npm run dev
-   ```
+# Start development server
+npm run dev
+```
 
-## Architecture
+## API Endpoints
 
-### Frontend Architecture
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Register new user |
+| POST | `/api/auth/login` | User login |
+| POST | `/api/auth/logout` | User logout |
 
-- Uses React with Vite for fast development and optimized builds
-- Implements Context API for global state management
-- Utilizes custom hooks for business logic
-- Employs Zustand for efficient state management
-- Socket.IO client for real-time communication
+### Messages
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/messages/:id` | Get messages |
+| POST | `/api/messages/send/:id` | Send message |
 
-### Backend Architecture
+### Users
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users` | Get users for sidebar |
 
-- RESTful API architecture
-- MVC pattern with controllers, models, and routes
-- Socket.IO server for handling real-time events
-- MongoDB with Mongoose for data modeling
-- JWT middleware for route protection
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Health Check
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Server health status |
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.

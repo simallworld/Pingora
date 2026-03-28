@@ -1,202 +1,226 @@
-# Pingora- The Chat Application Frontend Documentation
+# Pingora Frontend
+
+Modern, responsive chat application frontend built with React + Vite, featuring real-time messaging, user authentication, and a clean user interface.
 
 ## Overview
 
-A modern, responsive chat application frontend built with React + Vite, featuring real-time messaging, user authentication, and a clean user interface. The application uses Tailwind CSS for styling and Zustand for state management.
+The frontend of Pingora is a single-page application (SPA) that provides:
+- Real-time messaging interface
+- User authentication (Login/Signup)
+- Conversation management
+- Sound notifications for incoming messages
+- Responsive design for mobile and desktop
+
+## Tech Stack
+
+- **React 18+** - UI library
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Utility-first styling
+- **DaisyUI** - Component library
+- **Zustand** - State management
+- **Socket.IO Client** - Real-time communication
+- **React Router DOM** - Client-side routing
+- **React Icons** - Icon library
+- **React Hot Toast** - Toast notifications
 
 ## Project Structure
 
 ```
 frontend/
-├── index.html                        # Entry HTML file
-├── package.json                      # Project dependencies and scripts
-├── vite.config.js                    # Vite configuration
-├── tailwind.config.js                # Tailwind CSS configuration
-├── postcss.config.cjs                # PostCSS configuration
-├── eslint.config.js                  # ESLint configuration
+├── index.html                    # Entry HTML file
+├── package.json                  # Dependencies and scripts
+├── vite.config.js                # Vite configuration
+├── tailwind.config.js            # Tailwind CSS configuration
+├── postcss.config.js             # PostCSS configuration
+├── eslint.config.js              # ESLint configuration
 │
-├── public/                           # Static assets
-│   ├── bg.png                       # Background image
-│   └── vite.svg                     # Vite logo
+├── public/                       # Static assets (served at root)
+│   ├── bg.png                    # Background image
+│   ├── favicon.png               # Favicon
+│   └── notification.mp3          # Notification sound
 │
-├── src/                             # Source code
-│   ├── main.jsx                     # Application entry point
-│   ├── App.jsx                      # Root component
-│   ├── App.css                      # Global styles
-│   ├── index.css                    # Base styles
-│   │
-│   ├── assets/                      # Asset files
-│   │   ├── react.svg               # React logo
-│   │   └── sounds/
-│   │       └── notification.mp3    # Notification sound
-│   │
-│   ├── components/                  # Reusable components
-│   │   ├── messages/               # Message related components
-│   │   │   ├── Message.jsx        # Individual message component
-│   │   │   ├── MessageContainer.jsx # Message list container
-│   │   │   ├── MessageInput.jsx   # Message input component
-│   │   │   └── Messages.jsx       # Messages wrapper component
-│   │   │
-│   │   ├── sidebar/               # Sidebar components
-│   │   │   ├── Conversation.jsx   # Single conversation item
-│   │   │   ├── Conversations.jsx  # Conversation list
-│   │   │   ├── LogoutButton.jsx   # Logout functionality
-│   │   │   ├── SearchInput.jsx    # Search conversations
-│   │   │   └── Sidebar.jsx        # Main sidebar component
-│   │   │
-│   │   └── skeletons/            # Loading skeleton components
-│   │       └── MessageSkeleton.jsx # Message loading skeleton
-│   │
-│   ├── context/                    # React Context providers
-│   │   ├── AuthContext.jsx        # Authentication context
-│   │   └── SocketContext.jsx      # Socket.io context
-│   │
-│   ├── hooks/                      # Custom React hooks
-│   │   ├── useGetConversations.js # Fetch conversations
-│   │   ├── useGetMessages.js      # Fetch messages
-│   │   ├── useListenMessages.js   # Real-time message updates
-│   │   ├── useLogin.js            # Login functionality
-│   │   ├── useLogout.js           # Logout functionality
-│   │   ├── useSendMessage.js      # Send message functionality
-│   │   └── useSignup.js           # Signup functionality
-│   │
-│   ├── pages/                      # Application pages
-│   │   ├── home/                  # Home page
-│   │   │   └── Home.jsx          # Main chat interface
-│   │   │
-│   │   ├── login/                 # Login page
-│   │   │   └── Login.jsx         # Login form
-│   │   │
-│   │   └── signup/               # Signup page
-│   │       ├── GenderCheckbox.jsx # Gender selection
-│   │       └── SignUp.jsx        # Signup form
-│   │
-│   ├── utils/                     # Utility functions
-│   │   ├── emojis.js            # Emoji handling
-│   │   └── extractTime.js       # Time formatting
-│   │
-│   └── zustand/                  # State management
-│       └── useConversation.js   # Conversation state
+└── src/                          # Source code
+    ├── main.jsx                  # Application entry point
+    ├── App.jsx                   # Root component with routing
+    ├── App.css                   # Global styles
+    ├── index.css                 # Base styles (Tailwind)
+    │
+    ├── assets/                   # Asset files
+    │   ├── react.svg             # React logo
+    │   └── sounds/
+    │       └── notification.mp3  # Message notification sound
+    │
+    ├── components/               # Reusable React components
+    │   ├── messages/            # Message-related components
+    │   │   ├── Message.jsx      # Individual message bubble
+    │   │   ├── MessageContainer.jsx # Messages container + welcome screen
+    │   │   ├── MessageInput.jsx  # Message input with send button
+    │   │   └── Messages.jsx      # Messages list wrapper
+    │   │
+    │   ├── sidebar/             # Sidebar components
+    │   │   ├── Conversation.jsx  # Single conversation item
+    │   │   ├── Conversations.jsx # Conversation list
+    │   │   ├── LogoutButton.jsx # Logout button
+    │   │   ├── SearchInput.jsx  # Search conversations
+    │   │   └── Sidebar.jsx      # Main sidebar wrapper
+    │   │
+    │   └── skeletons/           # Loading skeleton components
+    │       └── MessageSkeleton.jsx # Loading animation
+    │
+    ├── context/                 # React Context providers
+    │   ├── AuthContext.jsx     # Authentication state
+    │   └── SocketContext.jsx   # Socket.IO connection
+    │
+    ├── hooks/                   # Custom React hooks
+    │   ├── api.js               # API URL helper
+    │   ├── useGetConversations.js # Fetch conversations
+    │   ├── useGetMessages.js    # Fetch messages
+    │   ├── useListenMessages.js # Real-time message listener
+    │   ├── useLogin.js          # Login functionality
+    │   ├── useLogout.js         # Logout functionality
+    │   ├── useSendMessage.js    # Send message functionality
+    │   └── useSignup.js         # Signup functionality
+    │
+    ├── pages/                   # Application pages
+    │   ├── home/
+    │   │   └── Home.jsx        # Main chat interface
+    │   ├── login/
+    │   │   └── Login.jsx       # Login form
+    │   └── signup/
+    │       ├── GenderCheckbox.jsx # Gender selection
+    │       └── SignUp.jsx      # Registration form
+    │
+    ├── utils/                  # Utility functions
+    │   ├── emojis.js           # Random emoji helper
+    │   └── extractTime.js     # Time formatting
+    │
+    └── zustand/                # Zustand state store
+        └── useConversation.js   # Conversation state
 ```
 
 ## Features
 
-- Real-time messaging interface
-- User authentication (Login/Signup)
-- Conversation management
-- Message notifications
-- Responsive design
-- Emoji support
-- Loading states
-- Error handling
-- User search
-- Gender-based avatars
+### Authentication
+- User registration with username, password, and gender
+- Automatic avatar generation based on gender
+- Login/logout functionality
+- Protected routes (redirect to login if not authenticated)
 
-## Technologies Used
+### Real-Time Messaging
+- Instant message delivery via Socket.IO
+- Optimistic UI updates (message appears immediately)
+- Sound notification for incoming messages
+- Message timestamp display
 
-- React 18+
-- Vite
-- Tailwind CSS
-- Zustand (State Management)
-- Socket.io-client
-- React Router DOM
-- PostCSS
-- ESLint
+### Conversation Management
+- List of all conversations in sidebar
+- Search/filter conversations
+- Online/offline status indicators
+- Profile pictures with DiceBear avatars
+
+### UI Components
+- Message bubbles with alignment (sent vs received)
+- Sticky message input at bottom
+- Responsive layout (mobile and desktop views)
+- Loading states and skeletons
+- Toast notifications for errors
 
 ## State Management
 
-- Zustand for global state
-- React Context for auth and socket states
-- Local state for component-specific data
+### Zustand Store
+- `useConversation.js` - Manages:
+  - `selectedConversation` - Current chat
+  - `messages` - Message list
+  - `setSelectedConversation` - Update selected chat
+  - `setMessages` - Update messages
+
+### React Context
+- `AuthContext` - User authentication state
+- `SocketContext` - Socket.IO connection and online users
 
 ## Custom Hooks
 
-- `useGetConversations`: Fetches user conversations
-- `useGetMessages`: Retrieves chat messages
-- `useListenMessages`: Real-time message updates
-- `useLogin`: Handles user login
-- `useLogout`: Manages user logout
-- `useSendMessage`: Handles message sending
-- `useSignup`: Manages user registration
+| Hook | Purpose |
+|------|---------|
+| `useLogin` | Handle user login with validation |
+| `useSignup` | Handle user registration |
+| `useLogout` | Handle user logout |
+| `useGetConversations` | Fetch all users for sidebar |
+| `useGetMessages` | Fetch messages for selected conversation |
+| `useSendMessage` | Send message with optimistic update |
+| `useListenMessages` | Listen for real-time messages |
 
-## Components
+## Environment Variables
 
-### Message Components
+Create a `.env` file in the frontend directory:
 
-- `Message`: Individual message display
-- `MessageContainer`: Messages list wrapper
-- `MessageInput`: Text input with emoji support
-- `Messages`: Main messages component
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
 
-### Sidebar Components
+For production (Vercel), set:
+```
+VITE_API_BASE_URL=https://pingora-uwf7.onrender.com
+```
 
-- `Conversation`: Single chat conversation
-- `Conversations`: List of conversations
-- `SearchInput`: User search functionality
-- `LogoutButton`: User logout
-- `Sidebar`: Main sidebar wrapper
+## Available Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
+```
+
+## Styling
+
+- **Tailwind CSS** for utility-first styling
+- **DaisyUI** for pre-built components
+- Responsive design with mobile-first approach
+- Glassmorphism effects (backdrop blur)
+- Dark theme support
 
 ## Getting Started
 
-1. Clone the repository
+### 1. Clone and Install
 
 ```bash
-git clone <repository-url>
 cd frontend
-```
-
-2. Install dependencies
-
-```bash
 npm install
 ```
 
-3. Set up environment variables
-   Create a `.env` file:
+### 2. Configure Environment
 
-```
-VITE_APP_API_URL=your_backend_url
+```bash
+# Create .env file
+echo "VITE_API_BASE_URL=http://localhost:8000" > .env
 ```
 
-4. Start the development server
+### 3. Start Development Server
 
 ```bash
 npm run dev
 ```
 
-## Available Scripts
+The app will be available at `http://localhost:5173`
 
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm run lint`: Run ESLint
-- `npm run preview`: Preview production build
+### 4. Build for Production
 
-## Styling
+```bash
+npm run build
+npm run preview
+```
 
-- Tailwind CSS for utility-first styling
-- Custom CSS for specific components
-- Responsive design breakpoints
-- Dark/Light mode support
+## Deployment
 
-## Best Practices
+This frontend is deployed on **Vercel**.
 
-- Component composition
-- Custom hook abstractions
-- Proper error handling
-- Loading states
-- Clean code structure
-- Performance optimization
-- Responsive design
-- Accessibility considerations
+### Required Environment Variable
 
-## Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Create Pull Request
+| Name | Value |
+|------|-------|
+| `VITE_API_BASE_URL` | `https://pingora-uwf7.onrender.com` |
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License

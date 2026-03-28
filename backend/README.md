@@ -1,213 +1,269 @@
-# Chat Application Backend Documentation
+# Pingora Backend
+
+Robust real-time chat application backend built with Node.js, Express.js, MongoDB, and Socket.IO.
 
 ## Overview
 
-A robust real-time chat application backend built with Node.js, Express.js, MongoDB, and Socket.IO. This backend provides secure user authentication, real-time messaging capabilities, and efficient data management.
+The backend of Pingora provides:
+- Secure user authentication with JWT
+- RESTful API for messages and users
+- Real-time messaging via Socket.IO
+- MongoDB database integration
+
+## Tech Stack
+
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **MongoDB** - Database
+- **Mongoose** - MongoDB object modeling
+- **Socket.IO** - Real-time bidirectional communication
+- **JSON Web Tokens (JWT)** - Authentication
+- **bcryptjs** - Password hashing
+- **cookie-parser** - Cookie handling
+- **cors** - Cross-origin resource sharing
+- **dotenv** - Environment variables
 
 ## Project Structure
 
 ```
 backend/
-├── server.js                         # Main application entry point
-├── package.json                      # Project dependencies and scripts
-├── README.md                         # Project documentation
+├── server.js                    # Application entry point
+├── package.json                 # Dependencies and scripts
+├── .env                         # Environment variables (gitignored)
 │
-├── controllers/                      # Request handlers
-│   ├── auth.controller.js           # Authentication logic
-│   ├── message.controller.js        # Message handling logic
-│   └── user.controller.js           # User management logic
+├── controllers/                 # Request handlers (MVC)
+│   ├── auth.controller.js       # Signup, login, logout
+│   ├── message.controller.js     # Send/get messages
+│   └── user.controller.js       # User list for sidebar
 │
-├── models/                          # Database schemas
-│   ├── conversation.model.js        # Conversation schema
-│   ├── message.model.js            # Message schema
-│   └── user.model.js               # User schema
+├── models/                      # Mongoose schemas
+│   ├── conversation.model.js     # Conversation schema
+│   ├── message.model.js         # Message schema
+│   └── user.model.js            # User schema
 │
-├── routes/                          # API routes
-│   ├── auth.routes.js              # Authentication routes
-│   ├── message.routes.js           # Message routes
-│   └── user.routes.js              # User management routes
+├── routes/                      # Express routes
+│   ├── auth.routes.js           # /api/auth/*
+│   ├── message.routes.js        # /api/messages/*
+│   └── user.routes.js           # /api/users/*
 │
-├── middleware/                      # Custom middleware functions
-│   └── protectRoute.js             # Route protection middleware
+├── middleware/                  # Express middleware
+│   └── protectRoute.js          # JWT authentication middleware
 │
-├── db/                             # Database configuration
-│   └── connectToMongoDB.js         # MongoDB connection setup
+├── db/                          # Database configuration
+│   └── connectToMongoDB.js      # MongoDB connection
 │
-├── socket/                         # WebSocket implementation
-│   └── socket.js                   # Socket.io setup and events
+├── socket/                      # Socket.IO
+│   └── socket.js                # Real-time events & CORS config
 │
-└── utils/                          # Utility functions
-    └── generateToken.js            # JWT token generation utility
+└── utils/                      # Utility functions
+    └── generateToken.js         # JWT token generation & cookie
 ```
-
-## Features
-
-- Real-time messaging using Socket.IO
-- User authentication with JWT
-- Password encryption with bcrypt
-- MongoDB database integration
-- RESTful API architecture
-- Protected routes implementation
-- Real-time status updates
-- Message delivery status
-- Typing indicators
 
 ## API Endpoints
 
-### Authentication Routes
+### Authentication Routes (`/api/auth`)
 
-```
-POST /api/auth/signup     # Register new user
-POST /api/auth/login      # User login
-POST /api/auth/logout     # User logout
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/signup` | Register new user |
+| POST | `/login` | User login |
+| POST | `/logout` | User logout |
 
-### Message Routes
+### Message Routes (`/api/messages`)
 
-```
-GET  /api/messages/:conversationId    # Get conversation messages
-POST /api/messages/send              # Send new message
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/:id` | Get messages with user |
+| POST | `/send/:id` | Send message to user |
 
-### User Routes
+### User Routes (`/api/users`)
 
-```
-GET  /api/users          # Search/list users
-GET  /api/users/:userId  # Get user profile
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Get all users except current |
+
+### Health Check (`/api`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Server health status |
 
 ## Data Models
 
 ### User Model
-
 ```javascript
 {
-  fullName: String,       // Required
-  username: String,       // Required, Unique
-  password: String,       // Required, Min length: 6
-  gender: String,         // Required, Enum: ["male", "female"]
-  profilePic: String,     // Default: ""
-  timestamps: true        // Tracks createdAt and updatedAt
+  fullName: String,        // Required
+  username: String,         // Required, unique, lowercase
+  password: String,         // Required, hashed
+  gender: String,          // Required, "male" or "female"
+  profilePic: String,       // DiceBear avatar URL
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-## Real-time Features
+### Message Model
+```javascript
+{
+  senderId: ObjectId,       // Reference to User
+  receiverId: ObjectId,     // Reference to User
+  message: String,          // Message content
+  createdAt: Date,
+  updatedAt: Date
+}
+```
 
-- Instant message delivery
-- Online status indicators
-- Message read receipts
-- Typing indicators
-- Real-time conversation updates
+### Conversation Model
+```javascript
+{
+  participants: [ObjectId], // Array of User references
+  messages: [ObjectId],     // Array of Message references
+  createdAt: Date,
+  updatedAt: Date
+}
+```
 
-## Security Features
+## Authentication
 
-- Password hashing (bcrypt)
-- JWT authentication
-- HTTP-only cookies
-- Protected routes
-- Input validation
-- XSS protection
+### JWT Flow
 
-## WebSocket Events
+1. User signs up/logs in
+2. Server generates JWT with user ID
+3. JWT is set as HTTP-only cookie
+4. Protected routes verify JWT via `protectRoute` middleware
+5. Cookie is sent automatically with requests (when `credentials: include`)
 
-- `connection`: New user connected
-- `disconnect`: User disconnected
-- `newMessage`: New message received
-- `typing`: User typing status
-- `messageDelivered`: Message delivery confirmation
+### Cookie Configuration
 
-## Middleware
+```javascript
+{
+  httpOnly: true,    // Prevents XSS
+  sameSite: "none",  // Cross-origin (production)
+  secure: true       // HTTPS only (production)
+}
+```
 
-- Authentication check
-- Route protection
-- Request validation
-- Error handling
+## Real-Time Features (Socket.IO)
+
+### Events
+
+| Event | Direction | Description |
+|-------|-----------|-------------|
+| `connection` | Client → Server | New user connected |
+| `disconnect` | Client → Server | User disconnected |
+| `newMessage` | Server → Client | New message received |
+| `getOnlineUsers` | Server → Client | Online users list |
+| `refreshUsers` | Server → Client | Refresh user list |
+
+### CORS Configuration
+
+```javascript
+{
+  origin: ["http://localhost:5173", "https://pingora-nine.vercel.app"],
+  credentials: true
+}
+```
 
 ## Environment Variables
 
-```
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+Create a `.env` file in the backend directory:
+
+```env
+PORT=8000
+MONGO_DB_URI=mongodb+srv://user:password@cluster.mongodb.net/chat-app-db
+JWT_SECRET=your-super-secret-jwt-key-at-least-32-chars
 NODE_ENV=development
+CLIENT_URL=http://localhost:5173
+```
+
+### Production Variables (Render)
+
+| Variable | Value |
+|----------|-------|
+| `PORT` | 8000 |
+| `MONGO_DB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secure random string |
+| `NODE_ENV` | production |
+| `CLIENT_URL` | https://pingora-nine.vercel.app |
+
+## Available Scripts
+
+```bash
+npm run dev     # Start with nodemon (development)
+npm start       # Start with node (production)
 ```
 
 ## Getting Started
 
-1. Clone the repository
+### 1. Clone and Install
 
 ```bash
-git clone <repository-url>
 cd backend
-```
-
-2. Install dependencies
-
-```bash
 npm install
 ```
 
-3. Set up environment variables
-
-- Create a `.env` file in the root directory
-- Add the required environment variables
-
-4. Start the server
+### 2. Configure Environment
 
 ```bash
-# Development
+# Create .env file with your values
+cp .env.example .env
+```
+
+### 3. Start Server
+
+```bash
+# Development (auto-restart on changes)
 npm run dev
 
 # Production
 npm start
 ```
 
-## Dependencies
+### 4. Test API
 
-- express
-- mongoose
-- socket.io
-- jsonwebtoken
-- bcryptjs
-- cookie-parser
-- dotenv
-- cors
+Visit `http://localhost:8000/api/health`
+
+## Deployment
+
+This backend is deployed on **Render**.
+
+### Deployment Steps
+
+1. Connect GitHub repository to Render
+2. Create Web Service
+3. Set build command: (none needed)
+4. Set start command: `npm start`
+5. Add environment variables
+6. Deploy
+
+## Security Features
+
+- Password hashing with bcrypt (salt rounds: 10)
+- JWT authentication with 15-day expiry
+- HTTP-only cookies (prevents XSS)
+- CORS protection
+- Input validation
+- Protected routes middleware
 
 ## Error Handling
 
-The application implements comprehensive error handling for:
+All endpoints return consistent error responses:
 
-- Invalid requests
-- Authentication failures
-- Database errors
-- Validation errors
-- Network issues
+```json
+{
+  "error": "Error message description"
+}
+```
 
-## Best Practices
-
-- MVC architecture
-- Modular code structure
-- Secure authentication
-- Efficient database queries
-- Real-time optimization
-- Clean code principles
-
-## Performance Considerations
-
-- Connection pooling
-- Efficient query optimization
-- Caching strategies
-- WebSocket optimization
-- Resource management
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a pull request
+HTTP Status Codes:
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request
+- `401` - Unauthorized
+- `404` - Not Found
+- `500` - Internal Server Error
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License
