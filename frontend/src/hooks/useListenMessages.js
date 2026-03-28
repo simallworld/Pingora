@@ -45,26 +45,28 @@ const useListenMessages = () => {
       
       // Play notification sound for incoming message
       try {
+        console.log("useListenMessages: Attempting to play sound...");
         if (notificationAudioRef.current) {
           notificationAudioRef.current.currentTime = 0;
+          console.log("useListenMessages: Audio ref exists, playing...");
           const playPromise = notificationAudioRef.current.play();
           if (playPromise !== undefined) {
             playPromise.then(() => {
-              console.log("useListenMessages: Notification sound played");
+              console.log("useListenMessages: ✓ Notification sound played successfully!");
             }).catch(error => {
-              console.log("useListenMessages: Audio play error:", error.message);
+              console.log("useListenMessages: ✗ Audio play error:", error.name, error.message);
             });
           }
         } else {
-          console.log("useListenMessages: Audio not preloaded, creating new instance");
+          console.log("useListenMessages: ✗ Audio not preloaded, creating new instance");
           const sound = new Audio(notificationSound);
           sound.volume = 0.5;
           sound.play().catch(err => {
-            console.log("Audio play blocked:", err.message);
+            console.log("useListenMessages: ✗ Audio play blocked:", err.message);
           });
         }
       } catch (err) {
-        console.log("Audio error:", err.message);
+        console.log("useListenMessages: ✗ Audio error:", err.message);
       }
       
       // Update messages state with the new message using functional update
