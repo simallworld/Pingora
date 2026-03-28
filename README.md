@@ -1,6 +1,6 @@
 # Pingora - Real Time Chat Application
 
-**Notion Doc:** (https://www.notion.so/Pingora-The-Real-Time-Chat-Application-241ad40474bd805da63edbd2dde17c27?source=copy_link)
+**Notion Doc:** [doc](https://www.notion.so/Pingora-The-Real-Time-Chat-Application-241ad40474bd805da63edbd2dde17c27?source=copy_link)
 
 ## Overview
 
