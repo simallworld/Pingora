@@ -17,19 +17,20 @@ export const SocketContextProvider = ({ children }) => {
 		if (authUser) {
 			const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 			console.log("Socket connecting to:", apiBaseUrl);
+			console.log("Auth user ID:", authUser._id);
 			const socketUrl = apiBaseUrl;
 			const newSocket = io(socketUrl, {
 				query: { userId: authUser._id },
 				withCredentials: true,
 				reconnection: true,
-				reconnectionAttempts: 5,
+				reconnectionAttempts: 10,
 				reconnectionDelay: 1000,
 				transports: ['websocket', 'polling'],
 			});
 
 			// Connection event handlers
 			newSocket.on("connect", () => {
-				console.log("Socket connected:", newSocket.id);
+				console.log("Socket connected successfully:", newSocket.id);
 			});
 
 			newSocket.on("connect_error", (error) => {
@@ -43,6 +44,10 @@ export const SocketContextProvider = ({ children }) => {
 			newSocket.on("getOnlineUsers", (users) => {
 				console.log("Online users updated:", users);
 				setOnlineUsers(users);
+			});
+
+			newSocket.on("newMessage", (msg) => {
+				console.log("Socket received newMessage event:", msg);
 			});
 
 			setSocket(newSocket);

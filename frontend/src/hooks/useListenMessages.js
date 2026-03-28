@@ -33,8 +33,15 @@ const useListenMessages = () => {
       // Add shake animation flag to new messages
       newMessage.shouldShake = true;
       // Play notification sound for incoming message
-      const sound = new Audio(notificationSound);
-      sound.play();
+      try {
+        const sound = new Audio(notificationSound);
+        sound.volume = 0.5;
+        sound.play().catch(err => {
+          console.log("Audio play blocked or failed:", err.message);
+        });
+      } catch (err) {
+        console.log("Audio error:", err.message);
+      }
       // Update messages state with the new message using functional update
       setMessages((prevMessages) => {
         // Prevent duplicate messages: do not add if there's an optimistic message

@@ -48,13 +48,17 @@ export const sendMessage = async (req, res) => {
 
     // Send real-time message notification to receiver if they are online
     const receiverSocketId = getReceiverSocketId(receiverId);
+    console.log("Receiver socket ID:", receiverSocketId);
     if (receiverSocketId) {
       console.log("Emitting newMessage to receiver:", receiverSocketId);
       io.to(receiverSocketId).emit("newMessage", messageForSocket);
+    } else {
+      console.log("Receiver not online or socket not found");
     }
 
     // Also emit to sender for immediate confirmation (in case they're on multiple tabs)
     const senderSocketId = getReceiverSocketId(senderId);
+    console.log("Sender socket ID:", senderSocketId);
     if (senderSocketId) {
       console.log("Emitting newMessage to sender:", senderSocketId);
       io.to(senderSocketId).emit("newMessage", messageForSocket);
