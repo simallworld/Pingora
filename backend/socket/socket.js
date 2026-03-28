@@ -1,11 +1,35 @@
 // Import required dependencies
-// Import required dependencies for Socket.IO setup
+import dotenv from "dotenv";
+dotenv.config();
+
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 // Create Express application instance
 const app = express();
+
+// Middleware - must be before routes
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    process.env.CLIENT_URL,
+  ].filter(Boolean),
+  credentials: true
+}));
+app.use(express.json());
+app.use(cookieParser());
+
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.json({ 
+    status: "ok", 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development"
+  });
+});
 
 // Create HTTP server and initialize Socket.io with CORS options
 const server = http.createServer(app);

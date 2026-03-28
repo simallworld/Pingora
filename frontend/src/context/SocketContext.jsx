@@ -15,16 +15,23 @@ export const SocketContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (authUser) {
-			// Connect to the correct backend port (8000)
-			const url = import.meta.env.VITE_SOCKET_URL || (import.meta.env.DEV ? "http://localhost:8000" : undefined);
-			const newSocket = io(url, {
+			const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+			const socketUrl = apiBaseUrl || "http://localhost:8000";
+			const newSocket = io(socketUrl, {
 				query: { userId: authUser._id },
 				withCredentials: true,
+				reconnection: true,
+				reconnectionAttempts: 5,
+				reconnectionDelay: 1000,
 			});
 
 			// Connection event handlers
 			newSocket.on("connect", () => {
 				console.log("Socket connected:", newSocket.id);
+			});
+
+			newSocket.on("connect_error", (error) => {
+				console.log("Socket connection error:", error.message);
 			});
 
 			newSocket.on("disconnect", () => {

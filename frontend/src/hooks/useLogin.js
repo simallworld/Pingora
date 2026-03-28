@@ -35,7 +35,12 @@ const useLogin = () => {
       localStorage.setItem("chat-user", JSON.stringify(data));
       setAuthUser(data);
     } catch (error) {
-      toast.error(error.message || "Login failed");
+      console.error("Login error:", error);
+      if (error.message === "Failed to fetch" || error.name === "TypeError") {
+        toast.error("Cannot connect to server. Please check your connection.");
+      } else {
+        toast.error(error.message || "Login failed");
+      }
     } finally {
       setLoading(false);
     }
