@@ -160,7 +160,7 @@ VITE_API_BASE_URL=http://localhost:8000
 
 For production (Vercel), set:
 ```
-VITE_API_BASE_URL=https://pingora-uwf7.onrender.com
+VITE_API_BASE_URL=your-backend-url
 ```
 
 ## Available Scripts

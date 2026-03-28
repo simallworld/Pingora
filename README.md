@@ -1,14 +1,8 @@
 # Pingora - Real-Time Chat Application
 
-![Vercel](https://img.shields.io/badge/Vercel-Deployed-brightgreen)
-![Render](https://img.shields.io/badge/Render-Deployed-brightgreen)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-blue)
-
 ## Overview
 
 Pingora is a modern, real-time chat application built with the MERN stack (MongoDB, Express.js, React, Node.js) and Socket.IO for real-time communication. The application provides a seamless chatting experience with features like real-time messaging, user authentication, and a responsive user interface.
-
-**Live Demo:** https://pingora-nine.vercel.app
 
 ## Tech Stack
 
@@ -86,17 +80,15 @@ Pingora/
 ## Deployment
 
 ### Frontend (Vercel)
-- **URL:** https://pingora-nine.vercel.app
-- **Environment Variable:** `VITE_API_BASE_URL` = Backend URL
+- **Environment Variable:** `VITE_API_BASE_URL` = Your backend URL
 
 ### Backend (Render)
-- **URL:** https://pingora-uwf7.onrender.com
 - **Environment Variables:**
   - `PORT` = 8000
-  - `MONGO_DB_URI` = MongoDB connection string
-  - `JWT_SECRET` = JWT signing secret
+  - `MONGO_DB_URI` = Your MongoDB connection string
+  - `JWT_SECRET` = Your JWT signing secret
   - `NODE_ENV` = production
-  - `CLIENT_URL` = Frontend URL (https://pingora-nine.vercel.app)
+  - `CLIENT_URL` = Your frontend URL
 
 ## Getting Started (Local Development)
 

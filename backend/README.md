@@ -160,7 +160,7 @@ backend/
 
 ```javascript
 {
-  origin: ["http://localhost:5173", "https://pingora-nine.vercel.app"],
+  origin: ["http://localhost:5173", "https://your-frontend.vercel.app"],
   credentials: true
 }
 ```
@@ -171,8 +171,8 @@ Create a `.env` file in the backend directory:
 
 ```env
 PORT=8000
-MONGO_DB_URI=mongodb+srv://user:password@cluster.mongodb.net/chat-app-db
-JWT_SECRET=your-super-secret-jwt-key-at-least-32-chars
+MONGO_DB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
 ```
