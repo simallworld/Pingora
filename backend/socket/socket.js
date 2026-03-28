@@ -36,13 +36,7 @@ app.get("/api/health", (req, res) => {
 
 // Root endpoint
 app.get("/", (req, res) => {
-  res.send("Server is running! Environment: " + (process.env.NODE_ENV || "development"));
-});
-
-// Catch-all 404 handler
-app.use((req, res) => {
-  console.log("404 for:", req.method, req.path);
-  res.status(404).send("Route not found: " + req.path);
+  res.json({ message: "Server is running!", environment: process.env.NODE_ENV || "development" });
 });
 
 // Create HTTP server and initialize Socket.io with CORS options
