@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 
 // Import socket context and conversation state management
 import { useSocketContext } from "../context/SocketContext";
+import { useAuthContext } from "../context/AuthContext";
 import useConversation from "../zustand/useConversation";
 
 // Custom hook to handle real-time message updates
@@ -11,6 +12,8 @@ const useListenMessages = () => {
   const { socket } = useSocketContext();
   // Get messages array and setter from global state
   const { setMessages } = useConversation();
+  // Get auth user to check if message is from another user
+  const { authUser } = useAuthContext();
   // Preload audio for better performance
   const notificationAudioRef = useRef(null);
 
@@ -37,33 +40,36 @@ const useListenMessages = () => {
     // Listen for incoming messages from the server
     const handleNewMessage = (newMessage) => {
       console.log("useListenMessages: Received new message:", newMessage);
-      // Add shake animation flag to new messages
-      newMessage.shouldShake = true;
       
-      // Play notification sound for incoming message
-      try {
-        console.log("useListenMessages: Attempting to play sound...");
-        if (notificationAudioRef.current) {
-          notificationAudioRef.current.currentTime = 0;
-          console.log("useListenMessages: Audio ref exists, playing...");
-          const playPromise = notificationAudioRef.current.play();
-          if (playPromise !== undefined) {
-            playPromise.then(() => {
-              console.log("useListenMessages: ✓ Notification sound played successfully!");
-            }).catch(error => {
-              console.log("useListenMessages: ✗ Audio play error:", error.name, error.message);
-            });
+      // Check if message is from another user (not self)
+      const senderId = typeof newMessage.senderId === 'string' 
+        ? newMessage.senderId 
+        : newMessage.senderId?._id;
+      const isFromOtherUser = senderId !== authUser?._id;
+      
+      console.log("useListenMessages: senderId:", senderId, "authUser._id:", authUser?._id, "isFromOtherUser:", isFromOtherUser);
+      
+      // Only play sound and shake for messages from other users
+      if (isFromOtherUser) {
+        newMessage.shouldShake = true;
+        
+        // Play notification sound only for incoming messages from others
+        try {
+          console.log("useListenMessages: Playing notification sound for incoming message...");
+          if (notificationAudioRef.current) {
+            notificationAudioRef.current.currentTime = 0;
+            const playPromise = notificationAudioRef.current.play();
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                console.log("useListenMessages: ✓ Notification sound played!");
+              }).catch(error => {
+                console.log("useListenMessages: ✗ Audio play error:", error.message);
+              });
+            }
           }
-        } else {
-          console.log("useListenMessages: ✗ Audio not preloaded, creating new instance");
-          const sound = new Audio(notificationSound);
-          sound.volume = 0.5;
-          sound.play().catch(err => {
-            console.log("useListenMessages: ✗ Audio play blocked:", err.message);
-          });
+        } catch (err) {
+          console.log("useListenMessages: ✗ Audio error:", err.message);
         }
-      } catch (err) {
-        console.log("useListenMessages: ✗ Audio error:", err.message);
       }
       
       // Update messages state with the new message using functional update
@@ -97,6 +103,6 @@ const useListenMessages = () => {
       console.log("useListenMessages: Removing newMessage listener");
       socket.off("newMessage", handleNewMessage);
     };
-  }, [socket, setMessages]);
+  }, [socket, setMessages, authUser]);
 };
 export default useListenMessages;
