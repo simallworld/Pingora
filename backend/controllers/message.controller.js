@@ -56,13 +56,7 @@ export const sendMessage = async (req, res) => {
       console.log("Receiver not online or socket not found");
     }
 
-    // Also emit to sender for immediate confirmation (in case they're on multiple tabs)
-    const senderSocketId = getReceiverSocketId(senderId);
-    console.log("Sender socket ID:", senderSocketId);
-    if (senderSocketId) {
-      console.log("Emitting newMessage to sender:", senderSocketId);
-      io.to(senderSocketId).emit("newMessage", messageForSocket);
-    }
+    // Note: We do NOT emit to sender here - frontend handles optimistic updates
 
     res.status(201).json(newMessage);
   } catch (error) {
