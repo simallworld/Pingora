@@ -8,15 +8,16 @@ const generateTokenAndSetCookie = (userId, res) => {
     expiresIn: "15d",
   });
 
+  // Determine if running in production (different frontend/backend domains)
+  const isProduction = process.env.NODE_ENV === "production";
+
   // Set JWT token in cookie with security configurations
-  console.log("generateToken - Setting cookie with sameSite:", process.env.NODE_ENV === "development" ? "strict" : "strict");
   res.cookie("jwt", token, {
     maxAge: 15 * 24 * 60 * 60 * 1000, // MS - Cookie will expire in 15 days
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "lax", // Changed from "strict" to "lax" to allow cross-site cookies
-    secure: process.env.NODE_ENV !== "development", // Use secure cookie in production
+    sameSite: isProduction ? "none" : "lax", // "none" for cross-origin (production), "lax" for same-origin (dev)
+    secure: isProduction ? true : false, // Require HTTPS in production
   });
-  console.log("generateToken - Cookie set successfully");
 };
 
 export default generateTokenAndSetCookie;

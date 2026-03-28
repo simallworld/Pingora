@@ -31,8 +31,13 @@ const PORT = process.env.PORT || 8000;
 // }));
 
 // app.use(cors({ origin: "*" }));
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin: ["http://localhost:5173", "https://pingora-nine.vercel.app/"],
+  origin: allowedOrigins,
   credentials: true
 }));
 

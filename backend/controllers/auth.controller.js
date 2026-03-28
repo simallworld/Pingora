@@ -99,7 +99,6 @@ export const login = async (req, res) => {
 
     // Generate JWT
     generateTokenAndSetCookie(user._id, res);
-    console.log("Login - Cookie set, response headers:", res.getHeaders());
 
     // Notify clients to refresh user lists
     try {
@@ -121,10 +120,11 @@ export const login = async (req, res) => {
 // ----------------- LOGOUT CONTROLLER -----------------
 export const logout = (req, res) => {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("jwt", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
+      secure: isProduction ? true : false,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 0,
     });
 
