@@ -45,9 +45,12 @@ const useListenMessages = () => {
       const senderId = typeof newMessage.senderId === 'string' 
         ? newMessage.senderId 
         : newMessage.senderId?._id;
-      const isFromOtherUser = senderId !== authUser?._id;
+      const authUserId = authUser?._id;
       
-      console.log("useListenMessages: senderId:", senderId, "authUser._id:", authUser?._id, "isFromOtherUser:", isFromOtherUser);
+      // Compare as strings to avoid type mismatches
+      const isFromOtherUser = String(senderId) !== String(authUserId);
+      
+      console.log("useListenMessages: Comparing senderId:", String(senderId), "vs authUserId:", String(authUserId), "→ isFromOtherUser:", isFromOtherUser);
       
       // Only play sound and shake for messages from other users
       if (isFromOtherUser) {
@@ -55,13 +58,13 @@ const useListenMessages = () => {
         
         // Play notification sound only for incoming messages from others
         try {
-          console.log("useListenMessages: Playing notification sound for incoming message...");
+          console.log("useListenMessages: Playing notification sound for INCOMING message...");
           if (notificationAudioRef.current) {
             notificationAudioRef.current.currentTime = 0;
             const playPromise = notificationAudioRef.current.play();
             if (playPromise !== undefined) {
               playPromise.then(() => {
-                console.log("useListenMessages: ✓ Notification sound played!");
+                console.log("useListenMessages: ✓ Notification sound played for INCOMING message!");
               }).catch(error => {
                 console.log("useListenMessages: ✗ Audio play error:", error.message);
               });
@@ -70,6 +73,8 @@ const useListenMessages = () => {
         } catch (err) {
           console.log("useListenMessages: ✗ Audio error:", err.message);
         }
+      } else {
+        console.log("useListenMessages: Message from self, NOT playing sound");
       }
       
       // Update messages state with the new message using functional update
