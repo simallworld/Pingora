@@ -16,13 +16,15 @@ export const SocketContextProvider = ({ children }) => {
 	useEffect(() => {
 		if (authUser) {
 			const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-			const socketUrl = apiBaseUrl || "http://localhost:8000";
+			console.log("Socket connecting to:", apiBaseUrl);
+			const socketUrl = apiBaseUrl;
 			const newSocket = io(socketUrl, {
 				query: { userId: authUser._id },
 				withCredentials: true,
 				reconnection: true,
 				reconnectionAttempts: 5,
 				reconnectionDelay: 1000,
+				transports: ['websocket', 'polling'],
 			});
 
 			// Connection event handlers
