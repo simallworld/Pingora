@@ -33,11 +33,11 @@ backend/
 │
 ├── controllers/                 # Request handlers (MVC)
 │   ├── auth.controller.js       # Signup, login, logout
-│   ├── message.controller.js     # Send/get messages
+│   ├── message.controller.js    # Send/get messages
 │   └── user.controller.js       # User list for sidebar
 │
 ├── models/                      # Mongoose schemas
-│   ├── conversation.model.js     # Conversation schema
+│   ├── conversation.model.js    # Conversation schema
 │   ├── message.model.js         # Message schema
 │   └── user.model.js            # User schema
 │
@@ -55,7 +55,7 @@ backend/
 ├── socket/                      # Socket.IO
 │   └── socket.js                # Real-time events & CORS config
 │
-└── utils/                      # Utility functions
+└── utils/                       # Utility functions
     └── generateToken.js         # JWT token generation & cookie
 ```
 
